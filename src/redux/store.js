@@ -5,6 +5,7 @@ import { rootSaga } from "./sagas";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authSlice from "./features/authSlice";
+import postSclice from "./features/postSclice";
 
 const sagaMiddleware = createSagaMiddleware();
 //persit
@@ -17,6 +18,7 @@ const persistConfig = {
 const reducer = combineReducers({
    user: userslice,
    auth: authSlice,
+   post: postSclice,
 });
 
 //persistReducer

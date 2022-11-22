@@ -7,7 +7,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 // modal
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { SIGNIN } from "../redux/gobal";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
@@ -73,6 +73,7 @@ function Header() {
                   />
                </div>
                <Navbar.Brand href="/home">Blogs</Navbar.Brand>
+               <Navbar.Brand href="/create">Create</Navbar.Brand>
                <Navbar.Toggle aria-controls="navbarScroll" />
                <Navbar.Collapse id="navbarScroll">
                   <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "100px" }} navbarScroll>

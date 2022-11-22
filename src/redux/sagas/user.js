@@ -1,7 +1,7 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { getusertoken, signIn, signUp } from "../api";
 import { signinSclice } from "../features/authSlice";
-import { addUserSlice, userSclice, userTokenSclice } from "../features/userSlice";
+import { addUserSlice, userSclice } from "../features/userSlice";
 import { CREATE_USER, GET_USER_TOKEN, SIGNIN } from "../gobal";
 
 export function* createUserSaga(action) {

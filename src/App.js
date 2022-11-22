@@ -4,6 +4,7 @@ import Header from "./component/Header";
 import Home from "./pages/Home";
 import Signup from "./pages/signup";
 import { ToastContainer } from "react-toastify";
+import CreateBlog from "./pages/CreateBlog";
 
 function App() {
    return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/create" element={<CreateBlog />} />
          </Routes>
       </>
    );
