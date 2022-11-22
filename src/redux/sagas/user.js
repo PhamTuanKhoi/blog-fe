@@ -23,8 +23,8 @@ export function* createUserSaga(action) {
 
 export function* signinSaga(action) {
    try {
-      yield signIn(action.user);
-      yield put(signinSclice(action.user));
+      const { data } = yield signIn(action.user);
+      yield put(signinSclice(data));
       action.toast.success(`Sigin success`);
    } catch (error) {
       if (error && error.response && error.response.data && error.response.data.message) {

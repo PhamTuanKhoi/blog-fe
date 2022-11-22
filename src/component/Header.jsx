@@ -25,7 +25,6 @@ function Header() {
 
    async function handleSubmit() {
       try {
-         console.log(user);
          await dispatch({ type: SIGNIN, user: { ...user }, toast });
          // toast.success(`Signup success`);
          setUser({
@@ -101,7 +100,7 @@ function Header() {
                <label>Password</label>
                <input
                   className="input-all"
-                  type="text"
+                  type="password"
                   onChange={(e) => setUser({ ...user, password: e.target.value })}
                   value={user.password}
                />
