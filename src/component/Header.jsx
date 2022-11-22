@@ -7,12 +7,36 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 // modal
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
+import { useDispatch } from "react-redux";
+import { SIGNIN } from "../redux/gobal";
+import { toast } from "react-toastify";
 
 function Header() {
    const [show, setShow] = useState(false);
 
    const handleClose = () => setShow(false);
    const handleShow = () => setShow(true);
+
+   const dispatch = useDispatch();
+   const [user, setUser] = useState({
+      username: "",
+      password: "",
+   });
+
+   async function handleSubmit() {
+      try {
+         console.log(user);
+         await dispatch({ type: SIGNIN, user: { ...user }, toast });
+         // toast.success(`Signup success`);
+         setUser({
+            username: "",
+            password: "",
+         });
+         handleClose();
+      } catch (error) {
+         console.log(error);
+      }
+   }
    return (
       <>
          <Navbar bg="light" expand="lg">
@@ -27,36 +51,21 @@ function Header() {
                <Navbar.Brand href="/home">Blogs</Navbar.Brand>
                <Navbar.Toggle aria-controls="navbarScroll" />
                <Navbar.Collapse id="navbarScroll">
-                  <Nav
-                     className="me-auto my-2 my-lg-0"
-                     style={{ maxHeight: "100px" }}
-                     navbarScroll
-                  >
+                  <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "100px" }} navbarScroll>
                      <Nav.Link href="#action1">Home</Nav.Link>
                      <Nav.Link href="#action2">Link</Nav.Link>
                      <NavDropdown title="Link" id="navbarScrollingDropdown">
-                        <NavDropdown.Item href="#action3">
-                           Action
-                        </NavDropdown.Item>
-                        <NavDropdown.Item href="#action4">
-                           Another action
-                        </NavDropdown.Item>
+                        <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
+                        <NavDropdown.Item href="#action4">Another action</NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action5">
-                           Something else here
-                        </NavDropdown.Item>
+                        <NavDropdown.Item href="#action5">Something else here</NavDropdown.Item>
                      </NavDropdown>
                      <Nav.Link href="#" disabled>
                         Link
                      </Nav.Link>
                   </Nav>
                   <Form className="d-flex">
-                     <Form.Control
-                        type="search"
-                        placeholder="Search"
-                        className="me-2"
-                        aria-label="Search"
-                     />
+                     <Form.Control type="search" placeholder="Search" className="me-2" aria-label="Search" />
                      <Button variant="outline-success">Search</Button>
                   </Form>
                   <div className="logo">
@@ -86,24 +95,20 @@ function Header() {
                <input
                   className="input-all"
                   type="text"
-                  //  onChange={(e) =>
-                  //    setScores({ ...scores, national: e.target.value })
-                  //  }
-                  //  value={scores?.national}
+                  onChange={(e) => setUser({ ...user, username: e.target.value })}
+                  value={user.username}
                />
                <label>Password</label>
                <input
                   className="input-all"
                   type="text"
-                  //  onChange={(e) =>
-                  //    setScores({ ...scores, national: e.target.value })
-                  //  }
-                  //  value={scores?.national}
+                  onChange={(e) => setUser({ ...user, password: e.target.value })}
+                  value={user.password}
                />
                <a href="/signup">New account</a>
             </Modal.Body>
             <Modal.Footer>
-               <Button variant="primary" onClick={handleClose}>
+               <Button variant="primary" onClick={handleSubmit}>
                   OK
                </Button>
             </Modal.Footer>

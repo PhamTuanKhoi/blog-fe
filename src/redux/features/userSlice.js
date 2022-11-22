@@ -14,8 +14,13 @@ const userSlice = createSlice({
          state = action.payload;
          return state;
       },
+
+      signinSclice: (state, action) => {
+         state = action.payload;
+         return state;
+      },
    },
 });
 
-export const { addUserSlice } = userSlice.actions;
+export const { addUserSlice, signinSclice } = userSlice.actions;
 export default userSlice.reducer;
