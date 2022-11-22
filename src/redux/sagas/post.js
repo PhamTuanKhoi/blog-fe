@@ -1,7 +1,7 @@
 import { put, takeEvery } from "redux-saga/effects";
 import { createBlog, listPost } from "../api";
-import { CREATE_POST, LIST_POST } from "../gobal";
-import { addPostSlice, listPostSlice } from "../features/postSclice";
+import { CREATE_POST, FILTER_TITLE, LIST_POST } from "../gobal";
+import { addPostSlice, listPostSlice, titlePostSlice } from "../features/postSclice";
 
 export function* createPostSaga(action) {
    try {
@@ -30,7 +30,17 @@ export function* listPostSaga(action) {
    }
 }
 
+export function* filterTitle(action) {
+   try {
+      yield;
+      yield put(titlePostSlice(action.title));
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export function* watchPostAsync() {
    yield takeEvery(CREATE_POST, createPostSaga);
    yield takeEvery(LIST_POST, listPostSaga);
+   yield takeEvery(FILTER_TITLE, filterTitle);
 }

@@ -8,7 +8,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch } from "react-redux";
-import { SIGNIN } from "../redux/gobal";
+import { FILTER_TITLE, SIGNIN } from "../redux/gobal";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { signIn } from "../redux/api";
@@ -61,6 +61,10 @@ function Header() {
          console.log(error);
       }
    }
+
+   async function handleSearch(e) {
+      dispatch({ type: FILTER_TITLE, title: e.target.value });
+   }
    return (
       <>
          <Navbar bg="light" expand="lg">
@@ -73,25 +77,25 @@ function Header() {
                   />
                </div>
                <Navbar.Brand href="/home">Blogs</Navbar.Brand>
-               <Navbar.Brand href="/create">Create</Navbar.Brand>
+               <Navbar.Brand href="/create">Write</Navbar.Brand>
                <Navbar.Toggle aria-controls="navbarScroll" />
                <Navbar.Collapse id="navbarScroll">
                   <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "100px" }} navbarScroll>
-                     <Nav.Link href="#action1">Home</Nav.Link>
-                     <Nav.Link href="#action2">Link</Nav.Link>
                      <NavDropdown title="Link" id="navbarScrollingDropdown">
                         <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
                         <NavDropdown.Item href="#action4">Another action</NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item href="#action5">Something else here</NavDropdown.Item>
                      </NavDropdown>
-                     <Nav.Link href="#" disabled>
-                        Link
-                     </Nav.Link>
                   </Nav>
                   <Form className="d-flex">
-                     <Form.Control type="search" placeholder="Search" className="me-2" aria-label="Search" />
-                     <Button variant="outline-success">Search</Button>
+                     <input
+                        onChange={handleSearch}
+                        type="search"
+                        placeholder="Enter title"
+                        className="input-all"
+                        aria-label="Search"
+                     />
                   </Form>
                   {isLogin && (
                      <>
