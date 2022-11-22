@@ -1,7 +1,8 @@
 import { put, takeEvery } from "redux-saga/effects";
-import { signIn, signUp } from "../api";
-import { addUserSlice, signinSclice } from "../features/userSlice";
-import { CREATE_USER, SIGNIN } from "../gobal";
+import { getusertoken, signIn, signUp } from "../api";
+import { signinSclice } from "../features/authSlice";
+import { addUserSlice, userSclice, userTokenSclice } from "../features/userSlice";
+import { CREATE_USER, GET_USER_TOKEN, SIGNIN } from "../gobal";
 
 export function* createUserSaga(action) {
    try {
@@ -25,6 +26,7 @@ export function* signinSaga(action) {
    try {
       const { data } = yield signIn(action.user);
       yield put(signinSclice(data));
+      yield put(userSclice(data.user));
       action.toast.success(`Sigin success`);
    } catch (error) {
       if (error && error.response && error.response.data && error.response.data.message) {
@@ -39,7 +41,19 @@ export function* signinSaga(action) {
    }
 }
 
+export function* userbyTokenSaga(action) {
+   try {
+      const { data } = yield getusertoken(action.token);
+      console.log(data);
+      //  yield userTokenSclice(action.token);
+      // yield put(userTokenSclice(data));
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export function* watchUsersAsync() {
    yield takeEvery(CREATE_USER, createUserSaga);
    yield takeEvery(SIGNIN, signinSaga);
+   yield takeEvery(GET_USER_TOKEN, userbyTokenSaga);
 }
