@@ -12,3 +12,6 @@ export const getusertoken = (token) => API.get("users/token/" + token);
 //blog
 export const createBlog = (payload) => API.post("/posts/create", payload);
 export const listPost = () => API.get("posts/list/");
+
+//cmt
+export const createCmt = (payload) => API.post("/cmt/create", payload);
