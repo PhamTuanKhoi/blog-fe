@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useWeb3 } from "../context/useUser";
 import { CREATE_CMT, LIST_POST } from "../redux/gobal";
 import { toast } from "react-toastify";
+import _ from "underscore";
 
 function Home() {
    const [show, setShow] = useState(false);
@@ -16,7 +17,7 @@ function Home() {
       check: false,
       id: "",
    });
-   const { posts } = useSelector((state) => state.post);
+   const { posts } = useSelector((state) => state.post, _.isEqual);
    const dispatch = useDispatch();
    const { user } = useWeb3();
 
@@ -26,12 +27,16 @@ function Home() {
    };
 
    useEffect(() => {
-      dispatch({ type: LIST_POST });
+      listPost();
    }, [load]);
+
+   async function listPost() {
+      await dispatch({ type: LIST_POST });
+   }
 
    async function handleCmt() {
       try {
-         dispatch({ type: CREATE_CMT, payload: { content: cmt, blog: blogId, owner: user?._id } }, toast);
+         await dispatch({ type: CREATE_CMT, payload: { content: cmt, blog: blogId, owner: user?._id } }, toast);
          setLoad((pre) => pre + 1);
          setCmt("");
          handleClose();
@@ -40,8 +45,9 @@ function Home() {
       }
    }
 
-   console.log(posts);
-   console.log(see);
+   function handleToast() {
+      toast.warn("Please Login");
+   }
 
    return (
       <>
@@ -63,8 +69,8 @@ function Home() {
                      </div>
                   </div>
                   <div className="content-main">
-                     {see.check == false && see.id !== item?._id ? item?.content.slice(0, 100) : item?.content}{" "}
-                     {see.check == false && see.id !== item?._id && (
+                     {see.check === false && see.id !== item?._id ? item?.content.slice(0, 100) : item?.content}{" "}
+                     {see.check === false && see.id !== item?._id && (
                         <span className="seemore" onClick={() => setSee({ check: true, id: item?._id })}>
                            ...see more
                         </span>
@@ -91,14 +97,20 @@ function Home() {
                         </div>
                      </div>
                   ))}
-                  <div
-                     className="reply"
-                     onClick={() => {
-                        handleShow(item);
-                     }}
-                  >
-                     reply to
-                  </div>
+                  {user?._id ? (
+                     <div
+                        className="reply"
+                        onClick={() => {
+                           handleShow(item);
+                        }}
+                     >
+                        reply to
+                     </div>
+                  ) : (
+                     <div className="reply" onClick={handleToast}>
+                        reply to
+                     </div>
+                  )}
                </div>
             ))}
          </div>

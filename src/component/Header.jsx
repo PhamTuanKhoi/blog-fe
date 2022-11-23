@@ -10,49 +10,28 @@ import Modal from "react-bootstrap/Modal";
 import { useDispatch } from "react-redux";
 import { FILTER_TITLE, SIGNIN } from "../redux/gobal";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
 import { signIn } from "../redux/api";
+import { useWeb3 } from "../context/useUser";
 
 function Header() {
    const [show, setShow] = useState(false);
 
    const handleClose = () => setShow(false);
    const handleShow = () => setShow(true);
-   const [isLogin, SetIsLogin] = useState(false);
    const dispatch = useDispatch();
-   const [user, setUser] = useState({
+   const { user, setUser } = useWeb3();
+   const [userd, setUserd] = useState({
       username: "",
       password: "",
    });
-   const [profile, setProfile] = useState({});
-
-   useEffect(() => {
-      let token = localStorage.getItem("persist:root");
-      if (JSON.parse(token)?.auth) {
-         fetchUser();
-      }
-   }, [isLogin]);
-
-   async function fetchUser() {
-      let token = localStorage.getItem("persist:root");
-      let parse = JSON.parse(token).auth;
-      let resUser = JSON.parse(parse).user;
-
-      if (resUser?._id) {
-         SetIsLogin(true);
-         setProfile(resUser);
-      }
-   }
 
    async function handleSubmit() {
       try {
-         const { data } = await signIn(user);
-         setProfile(data?.user);
-         await dispatch({ type: SIGNIN, user: { ...user }, toast });
+         const { data } = await signIn(userd);
+         setUser(data?.user);
+         await dispatch({ type: SIGNIN, user: { ...userd }, toast });
 
-         SetIsLogin(true);
-         // toast.success(`Signup success`);
-         setUser({
+         setUserd({
             username: "",
             password: "",
          });
@@ -69,9 +48,14 @@ function Header() {
    async function logout() {
       try {
          localStorage.removeItem("persist:root");
+         setUser({});
       } catch (error) {
          console.log(error);
       }
+   }
+
+   function handleToast() {
+      toast.warn("Please Login");
    }
    return (
       <>
@@ -85,7 +69,11 @@ function Header() {
                   />
                </div>
                <Navbar.Brand href="/home">Blogs</Navbar.Brand>
-               <Navbar.Brand href="/create">Write</Navbar.Brand>
+               {user?._id ? (
+                  <Navbar.Brand href="/create">Write</Navbar.Brand>
+               ) : (
+                  <Navbar.Brand onClick={handleToast}>Write</Navbar.Brand>
+               )}
                <Navbar.Toggle aria-controls="navbarScroll" />
                <Navbar.Collapse id="navbarScroll">
                   <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "100px" }} navbarScroll></Nav>
@@ -98,18 +86,18 @@ function Header() {
                         aria-label="Search"
                      />
                   </Form>
-                  {isLogin && (
-                     <>
-                        {" "}
-                        <NavDropdown title={profile?.name} id="navbarScrollingDropdown">
+                  <>
+                     {" "}
+                     {user?._id && (
+                        <NavDropdown title={user?.name} id="navbarScrollingDropdown">
                            <NavDropdown.Item width="60px" href="#action5" onClick={logout}>
                               Logout
                            </NavDropdown.Item>
                         </NavDropdown>
-                     </>
-                  )}
+                     )}
+                  </>
                   {/* modal signin */}
-                  {isLogin === false && (
+                  {!user?._id && (
                      <Navbar.Brand href="#" onClick={handleShow}>
                         <div className="logo">Sigin</div>
                      </Navbar.Brand>
@@ -129,15 +117,15 @@ function Header() {
                <input
                   className="input-all"
                   type="text"
-                  onChange={(e) => setUser({ ...user, username: e.target.value })}
-                  value={user.username}
+                  onChange={(e) => setUserd({ ...userd, username: e.target.value })}
+                  value={userd.username}
                />
                <label>Password</label>
                <input
                   className="input-all"
                   type="password"
-                  onChange={(e) => setUser({ ...user, password: e.target.value })}
-                  value={user.password}
+                  onChange={(e) => setUserd({ ...userd, password: e.target.value })}
+                  value={userd.password}
                />
                <a href="/signup">New account</a>
             </Modal.Body>
